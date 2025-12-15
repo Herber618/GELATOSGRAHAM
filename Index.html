@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gelato Grahams — Heladería Artesanal</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* Paleta del usuario */
+    :root{
+      --cherry: #9A0002; /* Cherry Cola */
+      --cream: #EFE6DE; /* Cream Vanilla */
+      --white: #ffffff;
+      --muted: #8b3b36;
+    }
+
+    html,body{height:100%;}
+    body{
+      font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg, rgba(239,230,222,0.95) 0%, rgba(246,239,236,0.95) 100%), url('FONDO.jpeg') center/cover no-repeat fixed;
+      color: var(--muted);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Navbar */
+    .navbar{
+      background: transparent;
+      padding: 1rem 2rem;
+    }
+    .nav-brand{
+      font-family: 'Playfair Display', serif;
+      color: var(--cherry);
+      font-weight:700;
+      letter-spacing: 1px;
+      font-size:1.45rem;
+    }
+    .nav-link{color:var(--muted) !important; font-weight:600}
+
+    /* Hero */
+    .hero{
+      padding:6rem 1rem 3rem;
+      text-align:center;
+      background: linear-gradient(180deg, rgba(239,230,222,0.85) 0%, rgba(246,239,236,0.85) 100%), url('FONDO.jpeg') center/cover no-repeat;
+      min-height: 700px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero .title{
+      font-family: 'Playfair Display', serif;
+      font-size:3.25rem;
+      color:var(--cherry);
+      letter-spacing:1px;
+      margin-bottom:0.5rem;
+    }
+    .hero .subtitle{
+      font-size:1.05rem;
+      color: #5b2322;
+      margin-bottom:2rem;
+    }
+
+    /* Logo circle */
+    .logo-wrap{
+      max-width:360px;
+      margin:0 auto 1.5rem;
+      background: #fff0f0cc;
+      border-radius:50%;
+      padding:30px;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+    .logo-wrap img{width:260px; height:auto}
+
+    /* CTA */
+    .btn-cta{
+      background:var(--cherry);
+      color:var(--cream);
+      border-radius:40px;
+      padding:0.7rem 1.4rem;
+      font-weight:700;
+      box-shadow:0 8px 20px rgba(154,0,2,0.18);
+      transition:transform .22s ease; 
+    }
+    .btn-cta:hover{transform:translateY(-4px)}
+
+    /* Section styles */
+    section{padding:4rem 0}
+    .section-title{font-weight:800;color:var(--cherry);margin-bottom:1.2rem}
+    .muted-lead{color:#6b3b39}
+
+    /* Cards */
+    .flavor-card{
+      border-radius:18px;
+      padding:18px;
+      background:linear-gradient(180deg,#fff,#fff0f0);
+      border:2px solid rgba(154,0,2,0.06);
+      transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .flavor-card:hover{transform:translateY(-8px);box-shadow:0 18px 30px rgba(154,0,2,0.06)}
+    .flavor-badge{display:inline-block;padding:6px 10px;border-radius:12px;background:var(--cherry);color:var(--cream);font-weight:700}
+
+    /* Gallery */
+    .gallery-item{border-radius:14px; overflow:hidden; background: #fff; min-height:200px; display:flex;align-items:center;justify-content:center}
+
+    /* Contact */
+    .contact-card{background:linear-gradient(180deg,#fff,#fff6f6);border-radius:16px;padding:1.6rem;border:1px solid rgba(0,0,0,0.04)}
+
+    /* Footer */
+    footer{padding:2.2rem 0;background:transparent;color:#6a3b39}
+
+    /* Simple animations */
+    .fade-in{opacity:0;transform:translateY(12px);transition:opacity .6s ease, transform .6s ease}
+    .fade-in.show{opacity:1;transform:none}
+
+    .float{animation:floaty 4s ease-in-out infinite}
+    @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+
+    /* Carrito */
+    .cart-icon{
+      position: relative;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: var(--cherry);
+    }
+    .cart-badge{
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--cherry);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .cart-modal{
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 350px;
+      height: 100vh;
+      background: white;
+      box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+      z-index: 1050;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .cart-modal.active{
+      transform: translateX(0);
+    }
+    .cart-overlay{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+      display: none;
+    }
+    .cart-overlay.active{
+      display: block;
+    }
+    .cart-item{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .btn-buy{
+      background: var(--cherry);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: transform 0.2s ease;
+    }
+    .btn-buy:hover{
+      transform: scale(1.05);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width:768px){
+      .hero .title{font-size:2rem}
+      .logo-wrap{max-width:260px;padding:18px}
+      .logo-wrap img{width:190px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand nav-brand" href="#">GELATO GRAHAMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item px-2"><a class="nav-link" href="#sabores">Sabores</a></li>
+          <li class="nav-item px-2"><a class="nav-link" href="#galeria">Galería</a></li>
+          <li class="nav-item px-2"><a class="nav-link" href="#sobre">Sobre</a></li>
+          <li class="nav-item px-2"><a class="nav-link" href="#contacto">Contacto</a></li>
+          <li class="nav-item px-2"><div class="cart-icon" onclick="toggleCart()">🛒<span class="cart-badge" id="cartCount">0</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <div class="logo-wrap float">
+        <img src="LOGO GRAHAM.png" alt="Logo Gelato Grahams">
+      </div>
+      <h1 class="title">Helados artesanales & graham love</h1>
+      <p class="subtitle">Sabores cremosos, galleta graham crujiente y mucho corazón. Hecho a mano en cada tanda.</p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="#sabores" class="btn btn-cta">Ver Sabores</a>
+        <a href="#contacto" class="btn btn-outline-secondary" style="border-radius:40px;padding:0.6rem 1.3rem;font-weight:700;color:var(--cherry)">Pedir ahora</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sabores -->
+  <section id="sabores">
+    <div class="container">
+      <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+          <h2 class="section-title">Nuestros sabores</h2>
+          <p class="muted-lead">Creamos combinaciones que celebran la galleta graham: desde clásicos como Vainilla con trozos hasta propuestas más atrevidas.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <span class="flavor-badge">Edición limitada</span>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="WhatsApp Image 2025-11-23 at 22.38.19 (2).jpeg" alt="Cherry Cola Graham" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Cherry Cola Graham</h5>
+            <p class="small">#9A0002 — Cerezas maceradas con base de crema y trozos de graham caramelizada.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Cherry Cola Graham', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="WhatsApp Image 2025-11-23 at 22.38.19.jpeg" alt="Cream Vanilla Crunch" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Cream Vanilla Crunch</h5>
+            <p class="small">#EFE6DE — Vainilla bourbon con corazón de crema y crumble de graham.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Cream Vanilla Crunch', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="WhatsApp Image 2025-11-23 at 22.38.20 (1).jpeg" alt="ChocoGraham Delight" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">ChocoGraham Delight</h5>
+            <p class="small">Chocolate oscuro, salsa de cacao y graham crocante.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('ChocoGraham Delight', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="WhatsApp Image 2025-11-23 at 22.38.20 (2).jpeg" alt="Fresa & Graham Dulce" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Fresa & Graham Dulce</h5>
+            <p class="small">Fresas frescas, crema de queso y migas crujientes de graham tostado.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Fresa & Graham Dulce', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="WhatsApp Image 2025-11-23 at 22.38.20 (3).jpeg" alt="Caramelo Salado & Graham" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Caramelo Salado & Graham</h5>
+            <p class="small">Caramelo artesanal con sal marina, crema y graham acaramelada.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Caramelo Salado & Graham', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="WhatsApp Image 2025-11-23 at 22.38.20.jpeg" alt="Café Espresso & Graham" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Café Espresso & Graham</h5>
+            <p class="small">Café espresso intenso, crema suave y trocitos de graham.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Café Espresso & Graham', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="WhatsApp Image 2025-11-23 at 22.38.21.jpeg" alt="Pistacho Premium" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Pistacho Premium</h5>
+            <p class="small">Pistacho natural molido, crema sedosa y graham tostado.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Pistacho Premium', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="HoneyGraham.jpg" alt="Honey Graham" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Honey Graham</h5>
+            <p class="small">Miel artesanal, crema suave con trocitos de graham caramelizado.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Honey Graham', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="Merengue.jpg" alt="Limón Merengue" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Limón Merengue</h5>
+            <p class="small">Limón fresco y merengue, con base de crema y graham crujiente.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Limón Merengue', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="Brownie.png" alt="Brownie Intenso" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Brownie Intenso</h5>
+            <p class="small">Pedazos de brownie casero, crema de chocolate y migas de graham.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Brownie Intenso', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="Turron.jpg" alt="Turrón Crujiente" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Turrón Crujiente</h5>
+            <p class="small">Turrón tradicional, crema suave y migas de graham tostado.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Turrón Crujiente', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+
+        <div class="col-md-4">
+          <article class="flavor-card p-4 fade-in">
+            <img src="Strawberry CheeseCake.png" alt="Strawberry Cheesecake" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px;">
+            <h5 class="mb-2">Strawberry Cheesecake</h5>
+            <p class="small">Cheesecake cremoso, base de graham tostado y mermelada de fresa fresca.</p>
+            <div class="mt-3"><strong>Precio:</strong> 10 Bs / porción</div>
+            <button class="btn-buy mt-2 w-100" onclick="addToCart('Strawberry Cheesecake', 10)">Añadir al carrito</button>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Galería -->
+  <section id="galeria" class="bg-light">
+    <div class="container">
+      <h3 class="section-title">Galería</h3>
+      <div class="row g-3">
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="WhatsApp Image 2025-11-23 at 22.38.19 (2).jpeg" alt="Galería 1" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="WhatsApp Image 2025-11-23 at 22.38.19.jpeg" alt="Galería 2" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="WhatsApp Image 2025-11-23 at 22.38.20 (1).jpeg" alt="Galería 3" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="WhatsApp Image 2025-11-23 at 22.38.20 (2).jpeg" alt="Galería 4" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="WhatsApp Image 2025-11-23 at 22.38.20 (3).jpeg" alt="Galería 5" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="WhatsApp Image 2025-11-23 at 22.38.20.jpeg" alt="Galería 6" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="WhatsApp Image 2025-11-23 at 22.38.21.jpeg" alt="Galería 7" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="FONDO.jpeg" alt="Galería 8" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="WhatsApp Image 2025-11-23 at 22.38.19 (2).jpeg" alt="Galería 9" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="gallery-item p-3 fade-in"><img src="WhatsApp Image 2025-11-23 at 22.38.20.jpeg" alt="Galería 10" style="width:100%;height:100%;object-fit:cover;"></div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <a class="btn btn-outline-secondary" href="#contacto" style="border-radius:40px;color:var(--cherry);font-weight:700">Reservar degustación</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section id="sobre">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <h3 class="section-title">Nuestra historia</h3>
+          <p class="muted-lead">Gelato Grahams nació de un momento simple pero especial: el aroma dulce de unas galletas graham recién horneadas que llenaron una cocina de recuerdos. Aquella mezcla de crujiente, calidez y suavidad despertó la idea de capturar esa sensación en un helado.</p>
+          
+          <p class="muted-lead">La marca empezó como un pequeño experimento artesanal, buscando unir la cremosidad perfecta con el toque único de las galletas graham. Tras muchas pruebas, combinaciones y recetas ajustadas con paciencia, surgió un helado distinto: suave, delicado y con trocitos de graham que sorprenden en cada bocado.</p>
+          
+          <p class="muted-lead"><strong>Desde el inicio, Gelato Grahams se creó con una intención clara: convertir los sabores en emociones.</strong> Queremos que cada cucharada recuerde a momentos bonitos, a tardes tranquilas, a sensaciones que abrazan.</p>
+          
+          <p class="muted-lead">Hoy, Gelato Grahams es más que un helado. Es una experiencia artesanal hecha en pequeños lotes, con ingredientes seleccionados y una dedicación que se nota en cada detalle. Cada sabor cuenta una historia: una mezcla de nostalgia, creatividad y cariño por las cosas hechas a mano.</p>
+          
+          <p class="muted-lead"><strong>Porque para nosotros, un helado no es solo un postre…</strong></p>
+        </div>
+        <div class="col-lg-6 text-center">
+          <img src="paleta graham.jpg" alt="Paleta de colores" style="max-width:320px;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,0.06)">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h3 class="section-title">Contacto & Pedidos</h3>
+          <p class="muted-lead">Escríbenos para pedidos, eventos o pruebas de sabores. Respuesta en <strong>24 horas</strong> laborables.</p>
+
+          <div class="contact-card">
+            <form id="contactForm">
+              <div class="mb-3"><label class="form-label">Nombre</label><input class="form-control" id="name" required></div>
+              <div class="mb-3"><label class="form-label">Email</label><input class="form-control" id="email" type="email" required></div>
+              <div class="mb-3"><label class="form-label">Mensaje</label><textarea class="form-control" id="message" rows="4" required></textarea></div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-cta" type="submit">Enviar mensaje</button>
+                <button class="btn btn-outline-secondary" type="reset">Limpiar</button>
+              </div>
+              <div id="formAlert" class="mt-3" style="display:none;"></div>
+            </form>
+          </div>
+
+        </div>
+        <div class="col-md-6">
+          <h5 class="mb-3">Dónde encontrarnos</h5>
+          <p>Mercado central — Cochabamba</p>
+          <p><strong>Tel:</strong> +591 7000 0000</p>
+          <p><strong>Redes:</strong> @gelatograhams</p>
+
+          <div id="mapPrincipal" style="height:280px;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08)"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- UBICACIÓN EXTRA -->
+<section id="ubicacion">
+  <div class="container fade-in">
+    <h3 class="section-title">Otras ubicaciones</h3>
+    <p class="muted-lead">Además de nuestro punto principal, puedes encontrarnos también en:</p>
+
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="contact-card">
+          <h6 class="mb-2">Zona Norte</h6>
+          <p class="small mb-2">Av. América y Pando, frente al boulevard.</p>
+          <small class="text-muted">Cochabamba</small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="contact-card">
+          <h6 class="mb-2">La Cancha</h6>
+          <p class="small mb-2">Pasillo de comidas, sector postres.</p>
+          <small class="text-muted">Cochabamba</small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="contact-card">
+          <h6 class="mb-2">Centro</h6>
+          <p class="small mb-2">Plaza 14 de Septiembre, feria de fin de semana.</p>
+          <small class="text-muted">Cochabamba</small>
+        </div>
+      </div>
+    </div>
+
+    <div id="mapSecundario" style="height:350px;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);margin-top:2rem"></div>
+  </div>
+</section>
+
+  <footer>
+    <div class="container d-flex justify-content-between align-items-center">
+      <div>&copy; <strong>Gelato Grahams</strong> — Hecho con ♥</div>
+      <div class="small">Paleta: <span style="color:var(--cherry)">Cherry Cola</span> • <span style="color:var(--muted)">Cream Vanilla</span></div>
+    </div>
+  </footer>
+
+  <!-- Carrito Modal -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <div class="cart-modal" id="cartModal">
+    <h4 style="color:var(--cherry);margin-bottom:20px;">🛒 Mi Carrito</h4>
+    <div id="cartItems"></div>
+    <div style="border-top:2px solid #eee;margin-top:20px;padding-top:20px;">
+      <div style="display:flex;justify-content:space-between;font-weight:700;margin-bottom:15px;">
+        <span>Total:</span>
+        <span id="cartTotal">0 Bs</span>
+      </div>
+      <button class="btn-buy w-100" onclick="showCheckoutForm()" style="padding:10px;font-size:1rem;">Proceder al pago</button>
+      <button class="btn-buy w-100 mt-2" onclick="clearCart()" style="padding:10px;font-size:1rem;background:#999;">Limpiar carrito</button>
+    </div>
+  </div>
+
+  <!-- Formulario de Pago Modal -->
+  <div class="cart-overlay" id="checkoutOverlay" onclick="hideCheckoutForm()"></div>
+  <div class="cart-modal" id="checkoutModal" style="width:350px;height:auto;left:50%;transform:translateX(-50%) translateY(100px);top:50%;margin:0;right:auto;bottom:auto;border-radius:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h4 style="color:var(--cherry);margin:0;">💳 Formulario de Pago</h4>
+      <button type="button" onclick="hideCheckoutForm()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:#999;">✕</button>
+    </div>
+    <form id="checkoutForm">
+      <div style="margin-bottom:15px;">
+        <label style="display:block;font-weight:600;margin-bottom:5px;color:var(--cherry);font-size:0.9rem;">Nombre completo</label>
+        <input type="text" id="fullName" placeholder="Tu nombre" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-family:inherit;box-sizing:border-box;">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block;font-weight:600;margin-bottom:5px;color:var(--cherry);font-size:0.9rem;">Número de teléfono</label>
+        <input type="tel" id="phone" placeholder="+591 XXXXXXX" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-family:inherit;box-sizing:border-box;">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block;font-weight:600;margin-bottom:5px;color:var(--cherry);font-size:0.9rem;">Ubicación/Dirección</label>
+        <textarea id="location" placeholder="Ej: Calle Principal 123, Cochabamba" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-family:inherit;resize:vertical;height:60px;box-sizing:border-box;"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button type="submit" class="btn-buy" style="flex:1;padding:10px;font-size:0.95rem;">Confirmar pago</button>
+        <button type="button" class="btn-buy" onclick="hideCheckoutForm()" style="flex:1;padding:10px;background:#999;font-size:0.95rem;">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Notificación de Pedido Confirmado -->
+  <div id="orderNotification" style="position:fixed;top:20px;right:20px;background:white;border-left:4px solid var(--cherry);border-radius:8px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:2000;max-width:350px;display:none;animation:slideIn 0.5s ease;">
+    <h5 style="color:var(--cherry);margin-bottom:10px;margin-top:0;">✅ ¡Pedido Confirmado!</h5>
+    <div id="notificationContent" style="color:#333;font-size:0.95rem;line-height:1.5;"></div>
+  </div>
+
+  <style>
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    #checkoutModal {
+      position: fixed !important;
+      width: 350px !important;
+      height: auto !important;
+      left: 50% !important;
+      top: 50% !important;
+      transform: translateX(-50%) translateY(-50%) scale(0) !important;
+      transition: transform 0.3s ease !important;
+      border-radius: 16px !important;
+      z-index: 1051 !important;
+      padding: 20px !important;
+    }
+    #checkoutModal.active {
+      transform: translateX(-50%) translateY(-50%) scale(1) !important;
+    }
+    #checkoutOverlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #checkoutOverlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Leaflet CSS y JS (OpenStreetMap - Gratuito) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+  <script>
+    // Coordenadas principales (Mercado Central, Cochabamba)
+    const coordPrincipal = { lat: -17.3932, lng: -66.1610 };
+    
+    // Otras ubicaciones
+    const ubicaciones = [
+      { lat: -17.3850, lng: -66.1505, nombre: "Zona Norte", descripcion: "Av. América y Pando" },
+      { lat: -17.4050, lng: -66.1705, nombre: "La Cancha", descripcion: "Pasillo de comidas" },
+      { lat: -17.3938075, lng: -66.1569397, nombre: "Centro", descripcion: "Plaza 14 de Septiembre" }
+    ];
+
+    // Inicializar mapa principal
+    function initMapPrincipal() {
+      const mapPrincipal = L.map('mapPrincipal').setView([coordPrincipal.lat, coordPrincipal.lng], 16);
+      
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+      }).addTo(mapPrincipal);
+
+      L.circleMarker([coordPrincipal.lat, coordPrincipal.lng], {
+        radius: 12,
+        fillColor: "#9A0002",
+        color: "#fff",
+        weight: 3,
+        opacity: 1,
+        fillOpacity: 0.8
+      }).addTo(mapPrincipal).bindPopup(
+        '<div style="font-family: Montserrat; color: #333"><strong style="color: #9A0002">Gelato Grahams</strong><br>Mercado Central<br>Cochabamba, Bolivia<br><em>+591 7000 0000</em></div>'
+      ).openPopup();
+    }
+
+    // Inicializar mapa secundario con todas las ubicaciones
+    function initMapSecundario() {
+      const mapSecundario = L.map('mapSecundario').setView([-17.39, -66.15], 14);
+      
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+      }).addTo(mapSecundario);
+
+      // Crear grupo de límites para centrar mapa
+      const group = new L.featureGroup();
+
+      ubicaciones.forEach((ub, idx) => {
+        const marker = L.circleMarker([ub.lat, ub.lng], {
+          radius: 10,
+          fillColor: "#F39C12",
+          color: "#fff",
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.85
+        }).addTo(mapSecundario).bindPopup(
+          `<div style="font-family: Montserrat; color: #333"><strong style="color: #9A0002">${ub.nombre}</strong><br>${ub.descripcion}<br><small>Cochabamba</small></div>`
+        );
+
+        group.addLayer(marker);
+      });
+
+      // Centrar mapa en todos los marcadores
+      mapSecundario.fitBounds(group.getBounds().pad(0.1));
+    }
+
+    // Esperar a que DOM esté listo
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          initMapPrincipal();
+          initMapSecundario();
+        }, 300);
+      });
+    } else {
+      setTimeout(() => {
+        initMapPrincipal();
+        initMapSecundario();
+      }, 300);
+    }
+
+    // Simple fade-in on scroll
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) e.target.classList.add('show');
+      });
+    },{threshold:0.12});
+
+    document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+
+    // Contact form (simulación básica)
+    document.getElementById('contactForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const msg = document.getElementById('message').value.trim();
+      const alertBox = document.getElementById('formAlert');
+
+      if(!name || !email || !msg){
+        alertBox.style.display='block';
+        alertBox.className='text-danger small';
+        alertBox.innerText='Por favor completa todos los campos.';
+        return;
+      }
+
+      // Simular envío — aquí podrías conectar una API real
+      alertBox.style.display='block';
+      alertBox.className='text-success small';
+      alertBox.innerText='¡Mensaje enviado! Te contactaremos pronto.';
+      this.reset();
+    });
+
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        const target = document.querySelector(this.getAttribute('href'));
+        if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); }
+      });
+    });
+
+    // Carrito de compras
+    let cart = [];
+
+    function addToCart(name, price) {
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cart.push({ name, price, quantity: 1 });
+      }
+      updateCart();
+      showCartNotification();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById('cartItems');
+      const cartCount = document.getElementById('cartCount');
+      const cartTotal = document.getElementById('cartTotal');
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="color:#999;text-align:center;">Tu carrito está vacío</p>';
+        cartCount.textContent = '0';
+        cartTotal.textContent = '$0.00';
+        return;
+      }
+
+      let total = 0;
+      let itemCount = 0;
+      let html = '';
+
+      cart.forEach((item, index) => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        itemCount += item.quantity;
+        html += `
+          <div class="cart-item">
+            <div>
+              <strong style="color:var(--cherry)">${item.name}</strong>
+              <div style="font-size:0.9rem;color:#666;">${item.price} Bs x ${item.quantity}</div>
+            </div>
+            <div>
+              <div style="font-weight:700;color:var(--cherry);margin-bottom:5px;">${subtotal} Bs</div>
+              <button onclick="removeFromCart(${index})" style="background:#ff6b6b;color:white;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:0.8rem;">Eliminar</button>
+            </div>
+          </div>
+        `;
+      });
+
+      cartItems.innerHTML = html;
+      cartCount.textContent = itemCount;
+      cartTotal.textContent = total + ' Bs';
+    }
+
+    function toggleCart() {
+      const cartModal = document.getElementById('cartModal');
+      const cartOverlay = document.getElementById('cartOverlay');
+      cartModal.classList.toggle('active');
+      cartOverlay.classList.toggle('active');
+    }
+
+    function clearCart() {
+      if (confirm('¿Estás seguro que deseas limpiar el carrito?')) {
+        cart = [];
+        updateCart();
+        toggleCart();
+      }
+    }
+
+    function showCheckoutForm() {
+      if (cart.length === 0) {
+        alert('Tu carrito está vacío');
+        return;
+      }
+      const checkoutModal = document.getElementById('checkoutModal');
+      const checkoutOverlay = document.getElementById('checkoutOverlay');
+      checkoutModal.classList.add('active');
+      checkoutOverlay.classList.add('active');
+    }
+
+    function hideCheckoutForm() {
+      const checkoutModal = document.getElementById('checkoutModal');
+      const checkoutOverlay = document.getElementById('checkoutOverlay');
+      checkoutModal.classList.remove('active');
+      checkoutOverlay.classList.remove('active');
+    }
+
+    // Manejar envío del formulario
+    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const location = document.getElementById('location').value.trim();
+      
+      if (!fullName || !phone || !location) {
+        alert('Por favor completa todos los campos');
+        return;
+      }
+
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const orderDetails = cart.map(item => `${item.quantity}x ${item.name}`).join(', ');
+
+      // Mostrar notificación de confirmación
+      showOrderNotification(fullName, phone, location, total, orderDetails);
+
+      // Limpiar formulario
+      document.getElementById('checkoutForm').reset();
+      hideCheckoutForm();
+      toggleCart();
+      
+      // Limpiar carrito
+      cart = [];
+      updateCart();
+    });
+
+    function showOrderNotification(name, phone, location, total, details) {
+      const notification = document.getElementById('orderNotification');
+      const content = document.getElementById('notificationContent');
+      
+      content.innerHTML = `
+        <p><strong>Nombre:</strong> ${name}</p>
+        <p><strong>Teléfono:</strong> ${phone}</p>
+        <p><strong>Dirección:</strong> ${location}</p>
+        <p><strong>Pedido:</strong> ${details}</p>
+        <p><strong>Total:</strong> ${total} Bs</p>
+        <p style="margin-bottom:0;color:var(--cherry);"><strong>¡Tu pedido llegará en 30 minutos!</strong></p>
+      `;
+      
+      notification.style.display = 'block';
+      
+      // Ocultar notificación después de 6 segundos
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 6000);
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert('Tu carrito está vacío');
+        return;
+      }
+      
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const message = 'Hola, quiero comprar: ' + cart.map(item => `${item.quantity}x ${item.name} (${(item.price * item.quantity)} Bs)`).join(', ') + `. Total: ${total} Bs`;
+      
+      alert('¡Gracias por tu compra!\nTotal: ' + total + ' Bs\n\nEn breve recibirás instrucciones de pago.');
+      cart = [];
+      updateCart();
+      toggleCart();
+    }
+
+    function showCartNotification() {
+      // Opcional: mostrar notificación visual
+      const badge = document.getElementById('cartCount');
+      badge.style.transform = 'scale(1.3)';
+      setTimeout(() => {
+        badge.style.transform = 'scale(1)';
+      }, 300);
+    }
+  </script>
+
+</body>
+</html>
